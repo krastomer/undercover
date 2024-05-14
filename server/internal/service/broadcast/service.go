@@ -10,8 +10,7 @@ import (
 
 type BroadcastService interface {
 	NewClient(ctx context.Context, playerID string, w http.ResponseWriter, r *http.Request) error
-	SendMessage(ctx context.Context, playerID string, msg string) error
-	SendMessageAll(ctx context.Context, msg string) error
+	SendMessage(ctx context.Context, msg string, playerIDs []string) error
 }
 
 type broadcastService struct {
@@ -38,18 +37,14 @@ func (b *broadcastService) NewClient(ctx context.Context, playerID string, w htt
 	return nil
 }
 
-func (b *broadcastService) SendMessage(ctx context.Context, playerID string, msg string) error {
-	client, ok := b.client[playerID]
-	if !ok {
-		return errors.New("player lost connection")
-	}
+func (b *broadcastService) SendMessage(ctx context.Context, msg string, playerIDs []string) error {
+	for _, playerID := range playerIDs {
+		client, ok := b.client[playerID]
+		if !ok {
+			return errors.New("player lost connection")
+		}
 
-	return client.WriteMessage(websocket.TextMessage, []byte(msg))
-}
-
-func (b *broadcastService) SendMessageAll(ctx context.Context, msg string) error {
-	for playerID := range b.client {
-		b.SendMessage(ctx, playerID, msg)
+		return client.WriteMessage(websocket.TextMessage, []byte(msg))
 	}
 
 	return nil
