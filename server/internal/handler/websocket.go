@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -21,7 +22,8 @@ func NewWebSocketHandler(broadcastSvc broadcast.BroadcastService) WebSocketHandl
 
 func (h webSocketHandler) Upgrade(c *gin.Context) {
 	// TODO: check user id
-	userID := c.GetHeader("x-user-id")
+	userID := c.GetHeader("X-Authorization")
+	fmt.Println(userID)
 	err := h.broadcastSvc.NewClient(c.Request.Context(), userID, c.Writer, c.Request)
 	if err != nil {
 		c.Status(http.StatusInternalServerError)

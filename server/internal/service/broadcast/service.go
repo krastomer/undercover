@@ -27,6 +27,10 @@ func (b *broadcastService) NewClient(ctx context.Context, playerID string, w htt
 	upgrader := websocket.Upgrader{
 		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,
+		CheckOrigin: func(r *http.Request) bool {
+			// TODO: check secure
+			return true
+		},
 	}
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -44,7 +48,7 @@ func (b *broadcastService) SendMessage(ctx context.Context, msg string, playerID
 			return errors.New("player lost connection")
 		}
 
-		return client.WriteMessage(websocket.TextMessage, []byte(msg))
+		client.WriteMessage(websocket.TextMessage, []byte(msg))
 	}
 
 	return nil

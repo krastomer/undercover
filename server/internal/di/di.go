@@ -3,9 +3,10 @@ package di
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/krastomer/undercover/server/internal/handler"
+	gamerepo "github.com/krastomer/undercover/server/internal/repository/game"
 	"github.com/krastomer/undercover/server/internal/router"
 	"github.com/krastomer/undercover/server/internal/service/broadcast"
-	"github.com/krastomer/undercover/server/internal/service/game"
+	gamesvc "github.com/krastomer/undercover/server/internal/service/game"
 	"github.com/krastomer/undercover/server/pkg/connection"
 )
 
@@ -15,12 +16,11 @@ func NewContainer() (Container, error) {
 		return Container{}, err
 	}
 
-	_ = redisClient
-
 	// TODO: repository for bridge
+	gameRepo := gamerepo.NewRepository(redisClient)
 
 	broadcastSvc := broadcast.NewBroadcastService()
-	gameSvc := game.NewGameService(broadcastSvc)
+	gameSvc := gamesvc.NewGameService(broadcastSvc, gameRepo)
 
 	playerHandler := handler.NewPlayerHandler(gameSvc)
 	webSocketHandler := handler.NewWebSocketHandler(broadcastSvc)

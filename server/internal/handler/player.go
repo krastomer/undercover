@@ -1,8 +1,14 @@
 package handler
 
-import "github.com/krastomer/undercover/server/internal/service/game"
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/krastomer/undercover/server/internal/service/game"
+)
 
 type PlayerHandler interface {
+	CreateGame(c *gin.Context)
 }
 
 type playerHandler struct {
@@ -10,5 +16,11 @@ type playerHandler struct {
 }
 
 func NewPlayerHandler(gameService game.GameService) PlayerHandler {
-	return playerHandler{gameService: gameService}
+	return &playerHandler{gameService: gameService}
+}
+
+func (p playerHandler) CreateGame(c *gin.Context) {
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "hello, world",
+	})
 }
