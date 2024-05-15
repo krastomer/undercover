@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 export const connect = () => {
-	document.cookie = 'X-Authorization=user-id-1';
 	const ws = new WebSocket('ws://localhost:8080/ws');
 
 	ws.addEventListener('message', (message: unknown) => {
