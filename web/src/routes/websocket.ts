@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 export const connect = () => {
-	const ws = new WebSocket('ws://localhost:8080/ws');
+	const ws = new WebSocket('ws://localhost:8080/ws?token=xxx');
+
+	console.log('connect success');
 
 	ws.addEventListener('message', (message: unknown) => {
 		console.log(message);

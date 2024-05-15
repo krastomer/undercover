@@ -20,7 +20,6 @@ type GameService interface {
 type gameService struct {
 	broadcastService broadcast.BroadcastService
 	repository       gamerepo.Repository
-	// redisClient      *redis.Client
 }
 
 func NewGameService(broadcastSvc broadcast.BroadcastService, repository gamerepo.Repository) GameService {
@@ -37,10 +36,12 @@ func (g *gameService) CreateGame(ctx context.Context, hostPlayer gamerepo.Player
 		Host:    hostPlayer,
 	}
 
-	err := g.repository.SetGame(ctx, newGame)
-	if err != nil {
-		return gamerepo.Game{}, err
-	}
+	// err := g.repository.SetGame(ctx, newGame)
+	// if err != nil {
+	// 	return gamerepo.Game{}, err
+	// }
+
+	g.broadcastService.SendMessage(ctx, "new player join to the room", []string{"xxx"})
 
 	return newGame, nil
 }

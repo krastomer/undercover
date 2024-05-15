@@ -22,9 +22,9 @@ func NewWebSocketHandler(broadcastSvc broadcast.BroadcastService) WebSocketHandl
 
 func (h webSocketHandler) Upgrade(c *gin.Context) {
 	// TODO: check user id
-	userID := c.GetHeader("X-Authorization")
-	fmt.Println(userID)
-	err := h.broadcastSvc.NewClient(c.Request.Context(), userID, c.Writer, c.Request)
+	token := c.Query("token")
+	fmt.Println(token)
+	err := h.broadcastSvc.NewClient(c.Request.Context(), token, c.Writer, c.Request)
 	if err != nil {
 		c.Status(http.StatusInternalServerError)
 		return

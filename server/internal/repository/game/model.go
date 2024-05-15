@@ -1,28 +1,28 @@
 package game
 
 type Game struct {
-	GameID  string
-	Players []Player
-	Host    Player
-	Word    Word
+	GameID  string   `json:"gameId"`
+	Players []Player `json:"players"`
+	Host    Player   `json:"host"`
+	Word    Word     `json:"word"`
 }
 
 type Word struct {
-	Undercover string
-	Normal     string
+	Undercover string `json:"undercover"`
+	Normal     string `json:"normal"`
 }
 
 type Role string
 
 const (
-	Undercover = "UNDERCOVER"
-	Normal     = "NORMAL"
-	White      = "WHITE"
+	Undercover Role = "UNDERCOVER"
+	Normal     Role = "NORMAL"
+	White      Role = "WHITE"
 )
 
 type Player struct {
-	PlayerID string
-	Name     string
-	Role     Role
-	IsReveal bool
+	PlayerID string `json:"playerId"`
+	Name     string `json:"name"`
+	Role     Role   `json:"role"`
+	IsReveal bool   `json:"isReveal"`
 }

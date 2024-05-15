@@ -4,7 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/krastomer/undercover/server/internal/service/game"
+	gamerepo "github.com/krastomer/undercover/server/internal/repository/game"
+	gamesvc "github.com/krastomer/undercover/server/internal/service/game"
 )
 
 type PlayerHandler interface {
@@ -12,15 +13,29 @@ type PlayerHandler interface {
 }
 
 type playerHandler struct {
-	gameService game.GameService
+	gameService gamesvc.GameService
 }
 
-func NewPlayerHandler(gameService game.GameService) PlayerHandler {
+func NewPlayerHandler(gameService gamesvc.GameService) PlayerHandler {
 	return &playerHandler{gameService: gameService}
 }
 
 func (p playerHandler) CreateGame(c *gin.Context) {
-	c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "hello, world",
+	game, err := p.gameService.CreateGame(c.Request.Context(), gamerepo.Player{
+		PlayerID: "xxx",
+		Name:     "Will",
+		IsReveal: false,
+	})
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "something went wrong",
+			"err":     err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusInternalServerError, map[string]interface{}{
+		"game": game,
 	})
 }

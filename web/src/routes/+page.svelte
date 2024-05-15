@@ -3,9 +3,8 @@
 
 	import { connect } from './websocket';
 
-	createGame();
-
 	connect();
+	createGame();
 </script>
 
 <h1>Welcome to SvelteKit</h1>
